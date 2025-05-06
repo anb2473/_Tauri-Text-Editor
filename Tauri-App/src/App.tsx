@@ -5,6 +5,7 @@ import "./App.css";
 function App() {
   const editorRef = useRef<HTMLDivElement>(null);
   const [offsetX, setOffsetX] = useState(0); // State to store offsetX
+  const [offsetY, setOffsetY] = useState(0); // State to store offsetY
 
   useEffect(() => {
     const loadFileContent = async () => {
@@ -46,13 +47,17 @@ function App() {
     const rect = tempSpan.getBoundingClientRect();
     const editorRect = editor.getBoundingClientRect();
     const cursorX = rect.left - editorRect.left;
+    const cursorY = rect.top - editorRect.top;
     tempSpan.remove();
 
     const centerX = editorRect.width / 2;
+    const centerY = editorRect.height / 2;
     const calculatedOffsetX = centerX - cursorX;
+    const calculatedOffsetY = centerY - cursorY;
 
     setOffsetX(calculatedOffsetX); // Save offsetX in state
-    load_line_numbers(calculatedOffsetX); // Pass offsetX to load_line_numbers
+    setOffsetY(calculatedOffsetY); // Save offsetY in state
+    load_line_numbers(calculatedOffsetX, calculatedOffsetY); // Pass offsetX and offsetY to load_line_numbers
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -62,22 +67,24 @@ function App() {
     }
   };
 
-  const load_line_numbers = (calculatedOffsetX: number) => {
+  const load_line_numbers = (calculatedOffsetX: number, calculatedOffsetY: number) => {
     const editor = editorRef.current;
     if (!editor) return;
 
     const lineNumbers = document.querySelector(".line-numbers") as HTMLDivElement;
-    const lines = editor.innerText.split("\n").length;
+    let lines = editor.innerHTML.split("<br>").length;
+    if (editor.innerHTML.split("<br>")[lines - 1] === "") {
+      lines--;
+    }
+
     lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => `<span style="color: #777">${i + 1}</span>`).join("");
 
     // Adjust the height of the line numbers to match the editor
     lineNumbers.style.height = `${editor.scrollHeight}px`;
 
     // Use top and transform to position the line-numbers div
-    const editorRect = editor.getBoundingClientRect();
     lineNumbers.style.position = "absolute";
-    lineNumbers.style.top = `${editorRect.top}px`;
-    lineNumbers.style.transform = `translateX(${calculatedOffsetX - (lines.toString().length*25 + 200)}px)`; // Use offsetX for horizontal positioning
+    lineNumbers.style.transform = `translate(${calculatedOffsetX - 200}px, ${calculatedOffsetY + 180}px)`; // Adjust based on cursor X and Y
   };
 
   return (
@@ -93,7 +100,9 @@ function App() {
           onKeyUp={handleInput}
           onMouseUp={handleInput}
           onKeyDown={handleKeyDown}
-          style={{ transform: `translateX(${offsetX}px)` }} // Apply transform to editor
+          style={{
+            transform: `translate(${offsetX}px, ${offsetY}px)`, // Apply transform to editor
+          }}
           spellCheck={false}
         >
           Loading...
