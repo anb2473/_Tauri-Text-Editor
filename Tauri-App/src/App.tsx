@@ -72,10 +72,7 @@ function App() {
     if (!editor) return;
 
     const lineNumbers = document.querySelector(".line-numbers") as HTMLDivElement;
-    let lines = editor.innerHTML.split("<br>").length;
-    if (editor.innerHTML.split("<br>")[lines - 1] === "") {
-      lines++;
-    }
+    let lines = editor.innerHTML.split(/(?<!<div>)<br>|<div>/).length;
 
     lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => `<span style="color: #777">${i + 1}</span>`).join("");
 
@@ -84,7 +81,7 @@ function App() {
 
     // Use top and transform to position the line-numbers div
     lineNumbers.style.position = "absolute";
-    lineNumbers.style.transform = `translate(${calculatedOffsetX - 200}px, ${calculatedOffsetY + 180}px)`; // Adjust based on cursor X and Y
+    lineNumbers.style.transform = `translate(${calculatedOffsetX - 200}px, ${calculatedOffsetY }px)`; // Adjust based on cursor X and Y
   };
 
   return (
