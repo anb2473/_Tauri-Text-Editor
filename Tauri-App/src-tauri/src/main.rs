@@ -3,15 +3,19 @@
 
 use std::fs;
 use std::io::Read;
+use tauri::command;
 
-
-fn load_file(path: &str) -> String {
-    let mut file = fs::File::open(path).expect("Unable to open file");
+#[command]
+fn load_file(path: &str) -> Result<String, String> {
+    let mut file = fs::File::open(path).map_err(|_| "Unable to open file".to_string())?;
     let mut contents = String::new();
-    file.read_to_string(&mut contents).expect("Unable to read file");
-    contents
+    file.read_to_string(&mut contents).map_err(|_| "Unable to read file".to_string())?;
+    Ok(contents)
 }
 
 fn main() {
-    tauri_app_lib::run()
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![load_file]) // Register the command here
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }

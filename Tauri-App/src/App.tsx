@@ -1,9 +1,27 @@
-import { useRef, useState } from "react";
+import React from 'react';
+import { useEffect, useRef, useState } from "react";
+import { invoke } from '@tauri-apps/api/core';
 import "./App.css";
 
 function App() {
   const editorRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("");
+
+  useEffect(() => {
+    const loadFileContent = async () => {
+      try {
+        const filePath = "C:\\Users\\austi\\projects\\Tauri-App\\Tauri-App\\index.html"; // Replace with your test file path
+        const content = await invoke<string>("load_file", { path: filePath });
+        if (editorRef.current) {
+          editorRef.current.innerText = content; // Set the file content in the editor
+        }
+      } catch (error) {
+        console.error("Failed to load file:", error);
+      }
+    };
+
+    loadFileContent();
+  }, []);
 
   const handleInput = () => {
     const editor = editorRef.current;
@@ -58,7 +76,7 @@ function App() {
         style={{ transform }}
         spellCheck={false}
       >
-        Remote Notepad
+        Loading...
       </div>
     </main>      
   );
