@@ -77,7 +77,7 @@ function App() {
     const editorRect = editor.getBoundingClientRect();
     lineNumbers.style.position = "absolute";
     lineNumbers.style.top = `${editorRect.top}px`;
-    lineNumbers.style.transform = `translateX(${calculatedOffsetX - 200}px)`; // Use offsetX for horizontal positioning
+    lineNumbers.style.transform = `translateX(${calculatedOffsetX - (lines.toString().length*25 + 200)}px)`; // Use offsetX for horizontal positioning
   };
 
   return (
