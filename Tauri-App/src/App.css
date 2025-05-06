@@ -73,6 +73,14 @@ body::before {
   animation: float 5s infinite linear;
 }
 
+.structure {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -178,22 +186,6 @@ div.glow-text {
   counter-reset: line-number
 }
 
-.glow-text br::before {
-  top: 1.5em; /* Adjust based on line-height */
-}
-
-/* More specific targeting might be needed based on how lines are formed */
-.glow-text > *::before { /* Target direct children */
-  content: counter(line-number);
-  counter-increment: line-number;
-  position: absolute;
-  color: #777;
-  font-size: 0.8em;
-  text-align: right;
-  width: 1.5em;
-  transform: translateX(-250%) translateY(20%);
-}
-
 div.glow-text::-webkit-scrollbar {
   display: none;  /* Chrome, Safari, Opera */
 }
@@ -209,4 +201,14 @@ div.glow-text:focus-within {
 .glow-text {
   text-shadow: 0 0 10px currentColor;
   filter: brightness(1.5);
+}
+
+.line-numbers {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  padding-right: 10px;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  user-select: none;
 }
