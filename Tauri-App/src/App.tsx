@@ -14,6 +14,9 @@ function App() {
         const content = await invoke<string>("load_file", { path: filePath });
         if (editorRef.current) {
           editorRef.current.innerText = content; // Set the file content in the editor
+          if (editorRef.current.innerHTML.endsWith('<br>')) {
+              editorRef.current.innerHTML = editorRef.current.innerHTML.slice(0, -4) + "<div><br></div>"
+          }
         }
       } catch (error) {
         console.error("Failed to load file:", error);
