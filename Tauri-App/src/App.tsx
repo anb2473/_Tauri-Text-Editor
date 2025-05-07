@@ -68,6 +68,8 @@ function App() {
       e.preventDefault();
       document.execCommand("insertText", false, "    "); // Insert 4 spaces
     }
+
+    handleInput();
   };
 
   const load_line_numbers = (calculatedOffsetX: number, calculatedOffsetY: number) => {
