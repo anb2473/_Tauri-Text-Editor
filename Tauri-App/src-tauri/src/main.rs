@@ -4,6 +4,7 @@
 use std::fs;
 use std::io::Read;
 use tauri::command;
+use std::io::Write;
 
 #[command]
 fn load_file(path: &str) -> Result<String, String> {
@@ -13,9 +14,24 @@ fn load_file(path: &str) -> Result<String, String> {
     Ok(contents)
 }
 
+#[command]
+fn save_file(path: &str, contents: &str) -> i32 {
+    let mut file = match fs::File::create(path) {
+        Ok(f) => f,
+        Err(_) => return 1,
+    };
+
+    if file.write_all(contents.as_bytes()).is_err() {
+        return 1; 
+    }
+
+    0
+}
+
+
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![load_file]) // Register the command here
+        .invoke_handler(tauri::generate_handler![load_file, save_file]) // Register the command here
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

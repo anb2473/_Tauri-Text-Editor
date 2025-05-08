@@ -6,14 +6,15 @@ function App() {
   const editorRef = useRef<HTMLDivElement>(null);
   const [offsetX, setOffsetX] = useState(0); // State to store offsetX
   const [offsetY, setOffsetY] = useState(0); // State to store offsetY
+  const [path] = useState("C:\\Users\\austi\\projects\\Tauri-App\\Tauri-App\\test.txt"); // Path to the file
 
   useEffect(() => {
     const loadFileContent = async () => {
       try {
-        const filePath = "C:\\Users\\austi\\projects\\Tauri-App\\Tauri-App\\index.html"; // Replace with your test file path
-        const content = await invoke<string>("load_file", { path: filePath });
+        const filePath = path;
+        const content = await invoke<string>("load_file", { path: filePath })
         if (editorRef.current) {
-          editorRef.current.innerText = content; // Set the file content in the editor
+          editorRef.current.innerText = content.toString().replaceAll("&nbsp;", " ").replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("&amp;", "&").replaceAll("&quot;", "\"").replaceAll("&apos;", "\'"); // Set the file content in the editor
           if (editorRef.current.innerHTML.endsWith('<br>')) {
               editorRef.current.innerHTML = editorRef.current.innerHTML.slice(0, -4) + "<div><br></div>"
           }
@@ -63,11 +64,19 @@ function App() {
     load_line_numbers(calculatedOffsetX, calculatedOffsetY); // Pass offsetX and offsetY to load_line_numbers
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = async (e: React.KeyboardEvent) => {
     if (e.key === "Tab") {
       e.preventDefault();
       document.execCommand("insertText", false, "    "); // Insert 4 spaces
     }
+
+    if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      const ret = await invoke<number>("save_file", { path: path, contents: editorRef.current?.innerHTML.replaceAll("<br>", "\n").replaceAll("<div>", "").replaceAll("</div>", "\n") })   
+      if (ret !== 0) {
+        console.error("Failed to save file:", ret);
+      }
+    }  
 
     handleInput();
   };
