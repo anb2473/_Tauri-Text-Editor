@@ -14,7 +14,7 @@ function App() {
         const filePath = path;
         const content = await invoke<string>("load_file", { path: filePath })
         if (editorRef.current) {
-          editorRef.current.innerText = content.toString().replaceAll("&nbsp;", " ").replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("&amp;", "&").replaceAll("&quot;", "\"").replaceAll("&apos;", "\'"); // Set the file content in the editor
+          editorRef.current.innerText = content.toString(); // Set the file content in the editor
           if (editorRef.current.innerHTML.endsWith('<br>')) {
               editorRef.current.innerHTML = editorRef.current.innerHTML.slice(0, -4) + "<div><br></div>"
           }
@@ -72,7 +72,7 @@ function App() {
 
     if (e.key === "s" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      const ret = await invoke<number>("save_file", { path: path, contents: editorRef.current?.innerHTML.replaceAll("<br>", "\n").replaceAll("<div>", "").replaceAll("</div>", "\n") })   
+      const ret = await invoke<number>("save_file", { path: path, contents: editorRef.current?.innerHTML.replaceAll("&nbsp;", " ").replaceAll("&gt;", ">").replaceAll("&lt;", "<").replaceAll("&amp;", "&").replaceAll("&quot;", "\"").replaceAll("&apos;", "\'").replaceAll("<br>", "\n").replaceAll("<div>", "").replaceAll("</div>", "\n") })   
       if (ret !== 0) {
         console.error("Failed to save file:", ret);
       }
