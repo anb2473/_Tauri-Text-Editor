@@ -249,7 +249,7 @@ div.glow-text:focus-within {
   color: white; /* Text color */
   background-color: rgba(50, 50, 50, 0.9); /* Semi-transparent background */
   border-radius: 15px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Add shadow */
   z-index: 1000; /* Ensure it appears on top of other elements */
   padding: 20px; /* Add padding inside the box */
   overflow: hidden; /* Prevent content from overflowing */

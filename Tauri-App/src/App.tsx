@@ -198,6 +198,24 @@ function App() {
     if (e.key === "u" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       setIsHeaderVisible(true);
+
+      const stdOut = document.getElementById("std-out");
+      if (!stdOut) return;
+      if (stdOut.textContent !== "") {
+        stdOut.style.visibility = "visible"; 
+      }
+      else {
+        stdOut.style.visibility = "hidden"; 
+      }
+  
+      const stdErr = document.getElementById("std-err");
+      if (!stdErr) return;
+      if (stdErr.textContent !== "") {
+        stdErr.style.visibility = "visible"; 
+      }
+      else {
+        stdErr.style.visibility = "hidden"; 
+      }
     }
 
     if (e.key === "k" && (e.ctrlKey || e.metaKey)) {
@@ -252,8 +270,6 @@ function App() {
       onKeyDown={(e) => {
         if (e.key === "x" && (e.ctrlKey || e.metaKey)) {
           e.preventDefault();
-          // console.log("Hiding header");
-          // e.currentTarget.style.visibility = "hidden"; // Hide the header
           setIsHeaderVisible(false); // Hide the header
         }
       }}
