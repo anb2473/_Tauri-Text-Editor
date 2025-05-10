@@ -5,6 +5,7 @@ use std::fs;
 use std::io::Read;
 use tauri::command;
 use std::io::Write;
+use std::process::Command;
 
 #[command]
 fn load_file(path: &str) -> Result<String, String> {
@@ -28,10 +29,19 @@ fn save_file(path: &str, contents: &str) -> i32 {
     0
 }
 
+#[command]
+fn run(path: &str) -> Vec<String> {
+    let process = Command::new("powershell.exe")
+    .args(&["-File", "C:\\Users\\austi\\projects\\Tauri-App\\Tauri-App\\General.ps1", "-NoProfile", "-ExecutionPolicy", "ByPass", path])
+    .output()
+    .expect("Failed to execute process");
+
+    vec![String::from_utf8_lossy(&process.stdout).to_string(), String::from_utf8_lossy(&process.stderr).to_string()]
+}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![load_file, save_file]) // Register the command here
+        .invoke_handler(tauri::generate_handler![load_file, save_file, run]) // Register the command here
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

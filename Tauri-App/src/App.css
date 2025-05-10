@@ -203,6 +203,11 @@ div.glow-text:focus-within {
   filter: brightness(1.5);
 }
 
+.base-glow-text {
+  text-shadow: 0 0 10px currentColor;
+  filter: brightness(1.5);
+}
+
 .line-numbers {
   display: flex;
   flex-direction: column;
@@ -211,4 +216,52 @@ div.glow-text:focus-within {
   font-size: 1.5rem;
   line-height: 1.5;
   user-select: none;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3) rotate(-30deg); /* Start small and rotated */
+    opacity: 0; /* Fully transparent */
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2) rotate(15deg); /* Overshoot with a larger scale and rotation */
+    opacity: 1; /* Fully visible */
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(0.9) rotate(-5deg); /* Bounce back smaller */
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg); /* Settle into the final layout */
+  }
+}
+
+#std-header {
+  position: fixed; /* Ensure it stays in place */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%) scale(0.3) rotate(-30deg); /* Start small and rotated */
+  width: 80vw; /* Set width */
+  height: 600px; /* Set height */
+  display: flex; /* Flexbox for child alignment */
+  flex-direction: column; /* Stack children vertically */
+  justify-content: center; /* Center children vertically */
+  align-items: center; /* Center children horizontally */
+  color: white; /* Text color */
+  background-color: rgba(50, 50, 50, 0.9); /* Semi-transparent background */
+  border-radius: 15px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+  z-index: 1000; /* Ensure it appears on top of other elements */
+  padding: 20px; /* Add padding inside the box */
+  overflow: hidden; /* Prevent content from overflowing */
+  opacity: 0; /* Initially hidden */
+  visibility: hidden; /* Prevent interaction when hidden */
+  pointer-events: none; /* Disable interactions when hidden */
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Smooth transition */
+}
+
+#std-header.visible {
+  opacity: 1; /* Fully visible */
+  transform: translate(-50%, -50%) scale(1) rotate(0deg); /* Settle into the final layout */
+  visibility: visible; /* Allow interaction */
+  pointer-events: auto; /* Enable interactions when visible */
 }
