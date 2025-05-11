@@ -182,14 +182,13 @@ function App() {
           .replaceAll("<div>", "")
           .replaceAll("</div>", "\n"),
       });
-      console.log(std);
 
       setIsHeaderVisible(true);
 
       const stdOut = document.getElementById("std-out");
       if (!stdOut) return;
+      stdOut.textContent = std[0];
       if (std[0] !== "") {
-        stdOut.textContent = std[0];
         stdOut.style.visibility = "visible"; 
       }
       else {
@@ -198,8 +197,8 @@ function App() {
   
       const stdErr = document.getElementById("std-err");
       if (!stdErr) return;
+      stdErr.textContent = std[1];
       if (std[1] !== "") {
-        stdErr.textContent = std[1];
         stdErr.style.visibility = "visible"; 
       }
       else {
