@@ -169,7 +169,7 @@ function App() {
         console.error("Failed to save file:", ret);
       }
 
-      const std: string[] = await invoke<number>("run", {
+      const std: string[] = await invoke<string[]>("run", {
         path: path,
         contents: editor.innerHTML
           .replaceAll("&nbsp;", " ")
