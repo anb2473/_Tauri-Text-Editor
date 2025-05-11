@@ -38,11 +38,13 @@ function App() {
   
     // Save the current selection (cursor position)
     const selection = window.getSelection();
-    const range = selection?.getRangeAt(0);
-    const startOffset = range?.startOffset || 0;
-    const startContainer = range?.startContainer;
+    if (!selection || selection.rangeCount === 0) return;
   
-    // Only sanitize content if necessary (e.g., when specific tags are detected)
+    const range = selection.getRangeAt(0);
+    const startOffset = range.startOffset;
+    const startContainer = range.startContainer;
+  
+    // Sanitize the content
     if (editor.innerHTML.includes("<div>") || editor.innerHTML.includes("<span")) {
       editor.innerHTML = editor.innerHTML
         .replace(/<div>/g, "<br>") // Replace <div> with <br>
@@ -50,11 +52,19 @@ function App() {
         .replace(/<span[^>]*>/g, "") // Remove opening <span> tags
         .replace(/<\/span>/g, ""); // Remove closing </span>
   
-      // Restore the cursor position
+      // Recreate the range and restore the cursor position
       if (selection && startContainer) {
         const newRange = document.createRange();
-        newRange.setStart(startContainer, Math.min(startOffset, startContainer.textContent?.length || 0));
-        newRange.collapse(true);
+  
+        // Ensure the startContainer is still valid
+        if (editor.contains(startContainer)) {
+          newRange.setStart(startContainer, Math.min(startOffset, startContainer.textContent?.length || 0));
+        } else {
+          // If the startContainer is no longer valid, set the cursor to the end of the editor
+          newRange.selectNodeContents(editor);
+          newRange.collapse(false);
+        }
+  
         selection.removeAllRanges();
         selection.addRange(newRange);
       }
@@ -110,9 +120,9 @@ function App() {
   
       const range = selection.getRangeAt(0);
       const br = document.createElement("br");
-      range.deleteContents(); // Remove any selected content
-      range.insertNode(br); // Insert a <br> tag
-      range.collapse(false); // Move the cursor after the <br>
+      range.deleteContents();
+      range.insertNode(br);
+      range.collapse(false);
   
       // Ensure the cursor is placed correctly
       selection.removeAllRanges();
@@ -131,7 +141,8 @@ function App() {
         .replaceAll("&apos;", "'")
         .replaceAll("<br>", "\n")
         .replaceAll("<div>", "")
-        .replaceAll("</div>", "\n");
+        .replaceAll("</div>", "\n")
+        .replaceAll("\u200B", "");
   
       const ret = await invoke<number>("save_file", { path: path, contents });
       if (ret !== 0) {
@@ -150,7 +161,8 @@ function App() {
         .replaceAll("&apos;", "'")
         .replaceAll("<br>", "\n")
         .replaceAll("<div>", "")
-        .replaceAll("</div>", "\n");
+        .replaceAll("</div>", "\n")
+        .replaceAll("\u200B", "");
   
       const ret = await invoke<number>("save_file", { path: path, contents });
       if (ret !== 0) {
