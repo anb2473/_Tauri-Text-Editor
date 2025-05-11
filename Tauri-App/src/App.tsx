@@ -243,6 +243,7 @@ function App() {
       &nbsp;&nbsp;* CTRL + U: Show Output Overlay<br>
       &nbsp;&nbsp;* CTRL + X: Hide Output Overlay<br>
       &nbsp;&nbsp;* CTRL + K: View Key Bindings<br>
+      &nbsp;&nbsp;* CTRL + R: Reload<br>
       `;
 
       const stdErr = document.getElementById("std-err");
