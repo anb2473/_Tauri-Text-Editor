@@ -1,3 +1,5 @@
+This project is no longer being maintained.
+
 ```
 npm run tauri dev
 npm i
